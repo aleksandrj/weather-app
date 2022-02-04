@@ -1,11 +1,17 @@
 import { useState } from 'react';
+import config from '../config/config';
 
-const BASE_URL = 'https://foreca-weather.p.rapidapi.com';
+const API_HOST = process.env.API_HOST || config.API_HOST;
+const API_KEY = process.env.API_KEY || config.API_KEY;
+const BASE_URL = process.env.BASE_URL || config.BASE_URL;
 
 const useWeather = () => {
   const [isError, setError] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [locations, setLocations] = useState(null);
+  const [locations, setLocations] = useState(() => {
+    if (localStorage.getItem('previousResults'))
+      return JSON.parse(localStorage.getItem('previousResults'));
+  });
 
   const clearData = (arr, sliceRange) => {
     return arr.slice(0, sliceRange).map((location) => {
@@ -21,29 +27,60 @@ const useWeather = () => {
     const response = await fetch(`${BASE_URL}/location/search/${location}`, {
       method: 'GET',
       headers: {
+        'x-rapidapi-host': API_HOST,
+        'x-rapidapi-key': API_KEY,
+      },
+    });
+
+    if (!response.ok) {
+      setError('Failed to reach data.');
+    }
+
+    const data = await response.json();
+
+    if (!data || data.locations?.length === 0) {
+      setError('Location was not found.');
+      setLoading(false);
+      return;
+    }
+
+    setError(false);
+    let modifiedLocationsArr = null;
+
+    if (data?.locations.length > 5) {
+      modifiedLocationsArr = clearData(data.locations, 5);
+      setLocations(modifiedLocationsArr);
+      localStorage.setItem(
+        'previousResults',
+        JSON.stringify(modifiedLocationsArr)
+      );
+      return;
+    }
+
+    modifiedLocationsArr = clearData(data.locations, data.length);
+    setLocations(modifiedLocationsArr);
+    localStorage.setItem(
+      'previousResults',
+      JSON.stringify(modifiedLocationsArr)
+    );
+    return;
+  };
+
+  const getCurrentWeather = async (locationId) => {
+    const response = await fetch(`${BASE_URL}/location/search/`, {
+      method: 'GET',
+      headers: {
         'x-rapidapi-host': 'foreca-weather.p.rapidapi.com',
         'x-rapidapi-key': 'fed2790ad9mshfa53894f83429efp1aa69cjsn9d90c54064ad',
       },
     });
 
     if (!response.ok) {
-      throw new Error('Request failed!');
+      setError('Failed to reach data.');
     }
-
-    const data = await response.json();
-
-    if (!data || data.length === 0) {
-      setError('There is no such location');
-      setLoading(false);
-      return;
-    }
-
-    if (data?.locations.length > 5) {
-      setLocations(clearData(data?.locations, 5));
-    }
-
-    setLocations(clearData(data?.locations, data.length));
   };
+
+  const getForecast = (locationId) => {};
 
   return {
     isError,

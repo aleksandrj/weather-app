@@ -1,13 +1,25 @@
 import { useState } from 'react';
+import Error from '../Error/Error';
 import styles from './SearchForm.module.css';
 
 const SearchForm = (props) => {
   const [location, setLocation] = useState('');
+  const [error, setError] = useState('');
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
+    setError('');
+
     if (!location || location === '') return;
+
+    // Can be separated for unique messages (return concatenated string)
+    if (location.length > 30 || /\d/.test(location)) {
+      setError('Input must contain only letters and be <= 30 characters long.');
+      return;
+    }
+
     props.submitSearch(location);
+    setLocation('');
   };
 
   return (
@@ -31,6 +43,7 @@ const SearchForm = (props) => {
           Search
         </button>
       </div>
+      {error && <Error message={error} />}
     </form>
   );
 };

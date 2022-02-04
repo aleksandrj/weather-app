@@ -1,4 +1,5 @@
 import './App.css';
+import Error from './components/Error/Error';
 import Header from './components/Header/Header';
 import SearchForm from './components/SearchForm/SearchForm';
 import SearchResults from './components/SearchForm/SearchResults';
@@ -17,6 +18,7 @@ const App = () => {
       <Wrapper>
         <SearchForm submitSearch={onSubmit} />
         {locations && <SearchResults locations={locations} />}
+        {isError && <Error message={isError} />}
       </Wrapper>
     </div>
   );
