@@ -1,23 +1,17 @@
 import styles from './SearchResults.module.css';
 
-const SearchResults = () => {
+const SearchResults = (props) => {
   return (
-    <div className={`${styles['results-list']} list-group mt-5 mb-5`}>
-      <a href="#" className="list-group-item list-group-item-action">
-        Result1
-      </a>
-      <a href="#" className="list-group-item list-group-item-action">
-        Result2
-      </a>
-      <a href="#" className="list-group-item list-group-item-action">
-        Result3
-      </a>
-      <a href="#" className="list-group-item list-group-item-action">
-        Result4
-      </a>
-      <a href="#" className="list-group-item list-group-item-action">
-        Result5
-      </a>
+    <div className={`${styles['results-list']} list-group mt-5`}>
+      {props.locations.map((location) => (
+        <button
+          type="button"
+          className="list-group-item list-group-item-action"
+          key={location.id}
+        >
+          {location.city}, {location.country}
+        </button>
+      ))}
     </div>
   );
 };
