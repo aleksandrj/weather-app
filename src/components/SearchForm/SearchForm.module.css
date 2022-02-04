@@ -1,0 +1,21 @@
+.form {
+  width: 70%;
+}
+
+.search input {
+  height: 60px;
+  text-indent: 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.search input:focus {
+  box-shadow: none;
+  border: 1px solid #1864ab;
+}
+
+.search button {
+  height: 50px;
+  width: 100%;
+  text-align: center;
+  background-color: #1864ab;
+}
