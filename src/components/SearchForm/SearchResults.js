@@ -2,7 +2,7 @@ import styles from './SearchResults.module.css';
 
 const SearchResults = (props) => {
   const onClickHandler = (event) => {
-    console.log(event.target.id);
+    props.onSelectedLocation(event.target.id);
   };
 
   return (

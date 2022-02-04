@@ -13,6 +13,8 @@ const useWeather = () => {
       return JSON.parse(localStorage.getItem('previousResults'));
   });
 
+  const [forecast, setForecast] = useState(null);
+
   const clearData = (arr, sliceRange) => {
     return arr.slice(0, sliceRange).map((location) => {
       return {
@@ -24,6 +26,10 @@ const useWeather = () => {
   };
 
   const getLocations = async (location) => {
+    setError(false);
+    setLoading(true);
+    setLocations(null);
+
     const response = await fetch(`${BASE_URL}/location/search/${location}`, {
       method: 'GET',
       headers: {
@@ -54,6 +60,7 @@ const useWeather = () => {
         'previousResults',
         JSON.stringify(modifiedLocationsArr)
       );
+      setLoading(false);
       return;
     }
 
@@ -63,30 +70,69 @@ const useWeather = () => {
       'previousResults',
       JSON.stringify(modifiedLocationsArr)
     );
-    return;
+
+    setLoading(false);
   };
 
-  const getCurrentWeather = async (locationId) => {
-    const response = await fetch(`${BASE_URL}/location/search/`, {
-      method: 'GET',
-      headers: {
-        'x-rapidapi-host': 'foreca-weather.p.rapidapi.com',
-        'x-rapidapi-key': 'fed2790ad9mshfa53894f83429efp1aa69cjsn9d90c54064ad',
-      },
-    });
+  const getForecast = async (locationId) => {
+    setError(false);
+    setLoading(true);
+    setLocations(null);
 
-    if (!response.ok) {
+    const response = await Promise.all([
+      fetch(`${BASE_URL}/current/${locationId}`, {
+        method: 'GET',
+        headers: {
+          'x-rapidapi-host': API_HOST,
+          'x-rapidapi-key': API_KEY,
+        },
+      }),
+      fetch(
+        `${BASE_URL}/forecast/daily/${locationId}?periods=8&dataset=standard`,
+        {
+          method: 'GET',
+          headers: {
+            'x-rapidapi-host': API_HOST,
+            'x-rapidapi-key': API_KEY,
+          },
+        }
+      ),
+    ]);
+
+    if (!response[0].ok || !response[1].ok) {
       setError('Failed to reach data.');
     }
-  };
 
-  const getForecast = (locationId) => {};
+    const curWeatherData = await response[0].json();
+    const forecastedData = await response[1].json();
+
+    if (
+      !curWeatherData ||
+      curWeatherData.current?.length === 0 ||
+      !forecastedData ||
+      forecastedData.forecast?.length === 0
+    ) {
+      setError('No data was found for the selected location.');
+      setLoading(false);
+      return;
+    }
+
+    // Data can be "gutted" before setting value
+    setForecast({
+      curWeatherData,
+      forecastedData,
+    });
+
+    setLoading(false);
+  };
 
   return {
     isError,
     isLoading,
     locations,
+    forecast,
     getLocations,
+    getForecast,
   };
 };
 
