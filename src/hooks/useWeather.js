@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import config from '../config/config';
+import {
+  getCurrentDayForecast,
+  getWeekForecast,
+} from '../helpers/getFormattedData';
 
 const API_HOST = process.env.API_HOST || config.API_HOST;
 const API_KEY = process.env.API_KEY || config.API_KEY;
@@ -26,6 +30,12 @@ const useWeather = () => {
   };
 
   const getLocations = async (location) => {
+    // Can be separated for unique messages (return concatenated string)
+    if (location.length > 30 || /\d/.test(location)) {
+      setError('Input must contain only letters and be <= 30 characters long.');
+      return;
+    }
+
     setError(false);
     setLoading(true);
     setLocations(null);
@@ -74,13 +84,13 @@ const useWeather = () => {
     setLoading(false);
   };
 
-  const getForecast = async (locationId) => {
+  const getForecast = async (locationId, city, country) => {
     setError(false);
     setLoading(true);
     setLocations(null);
 
     const response = await Promise.all([
-      fetch(`${BASE_URL}/current/${locationId}`, {
+      fetch(`${BASE_URL}/current/${locationId}?tz=Europe%2FVilnius`, {
         method: 'GET',
         headers: {
           'x-rapidapi-host': API_HOST,
@@ -117,10 +127,17 @@ const useWeather = () => {
       return;
     }
 
+    const cleanCurWeatherData = getCurrentDayForecast(
+      curWeatherData.current,
+      city,
+      country
+    );
+    const cleanForecastedData = getWeekForecast(forecastedData.forecast);
+
     // Data can be "gutted" before setting value
     setForecast({
-      curWeatherData,
-      forecastedData,
+      current: cleanCurWeatherData,
+      forecast: cleanForecastedData,
     });
 
     setLoading(false);

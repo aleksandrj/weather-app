@@ -1,5 +1,7 @@
+import { Fragment } from 'react';
 import './App.css';
 import Error from './components/Error/Error';
+import Forecast from './components/Forecast/Forecast';
 import Header from './components/Header/Header';
 import SearchForm from './components/SearchForm/SearchForm';
 import SearchResults from './components/SearchForm/SearchResults';
@@ -15,26 +17,45 @@ const App = () => {
     getLocations(value);
   };
 
-  const onClickHandler = (id) => {
-    getForecast(id);
+  const onClickHandler = (id, city, country) => {
+    getForecast(id, city, country);
   };
 
   return (
     <div className="App">
       <Header />
       <Wrapper>
-        {!forecast && <SearchForm submitSearch={onSubmit} />}
-        {!forecast && locations && (
-          <SearchResults
-            locations={locations}
-            onSelectedLocation={onClickHandler}
-          />
+        {!forecast && (
+          <Fragment>
+            <SearchForm submitSearch={onSubmit} />
+            {!isLoading && isError && <Error message={isError} />}
+            {!isLoading && locations && (
+              <SearchResults
+                locations={locations}
+                onSelectedLocation={onClickHandler}
+              />
+            )}
+
+            {isLoading && <Spinner />}
+          </Fragment>
         )}
-        {isError && <Error message={isError} />}
-        {isLoading && <Spinner />}
+        {forecast && <Forecast forecast={forecast} />}
       </Wrapper>
     </div>
   );
 };
 
 export default App;
+
+/* <Wrapper>
+{!forecast && <SearchForm submitSearch={onSubmit} />}
+{!forecast && locations && (
+  <SearchResults
+    locations={locations}
+    onSelectedLocation={onClickHandler}
+  />
+)}
+{isError && <Error message={isError} />}
+{isLoading && <Spinner />}
+{forecast && <Forecast forecast={forecast} />}
+</Wrapper> */

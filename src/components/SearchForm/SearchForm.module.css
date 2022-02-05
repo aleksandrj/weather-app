@@ -4,18 +4,26 @@
 
 .search input {
   height: 60px;
-  text-indent: 1rem;
+  text-indent: 0.45rem;
+  border-radius: 0;
   margin-bottom: 0.6rem;
 }
 
 .search input:focus {
+  border: 1px solid var(--grey);
   box-shadow: none;
-  border: 1px solid #1864ab;
 }
 
 .search button {
   height: 50px;
   width: 100%;
   text-align: center;
-  background-color: #1864ab;
+  color: var(--main-text-color);
+  border: 1px solid var(--secondary-color);
+  background-color: transparent;
+}
+
+.search button:hover {
+  background-color: var(--secondary-color);
+  color: var(--secondary-text-color);
 }
