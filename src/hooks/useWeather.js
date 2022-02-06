@@ -8,7 +8,7 @@ import {
 const API_HOST = process.env.API_HOST || config.API_HOST;
 const API_KEY = process.env.API_KEY || config.API_KEY;
 const BASE_URL = process.env.BASE_URL || config.BASE_URL;
-const BASE_URL_DB = process.env.BASE_URL || config.BASE_URL_DB;
+const BASE_URL_SRV = process.env.BASE_URL_SRV || config.BASE_URL_SRV;
 
 const useWeather = () => {
   const [isError, setError] = useState(false);
@@ -38,7 +38,7 @@ const useWeather = () => {
     }
 
     // Log search to DB
-    fetch(`${BASE_URL_DB}/api/logs`, {
+    fetch(`${BASE_URL_SRV}/api/logs`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -148,14 +148,14 @@ const useWeather = () => {
     );
 
     // Log click to DB
-    fetch(`${BASE_URL_DB}/api/logs`, {
+    fetch(`${BASE_URL_SRV}/api/logs`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         action: 'CLICK',
-        value: `${locationId}-${city}`,
+        value: locationId,
         result: JSON.stringify(cleanCurWeatherData),
       }),
     });

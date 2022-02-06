@@ -46,16 +46,3 @@ const App = () => {
 };
 
 export default App;
-
-/* <Wrapper>
-{!forecast && <SearchForm submitSearch={onSubmit} />}
-{!forecast && locations && (
-  <SearchResults
-    locations={locations}
-    onSelectedLocation={onClickHandler}
-  />
-)}
-{isError && <Error message={isError} />}
-{isLoading && <Spinner />}
-{forecast && <Forecast forecast={forecast} />}
-</Wrapper> */

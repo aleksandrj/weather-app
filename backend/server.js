@@ -3,15 +3,39 @@ const cors = require('cors');
 
 const app = express();
 
-const PORT = 8080;
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const db = require('./app/model');
+
+let url;
+if (
+  process.env.DB_HOST &&
+  process.env.DB_PORT &&
+  process.env.DB_USER &&
+  process.env.DB_PASSWORD &&
+  process.env.DB_NAME
+) {
+  url =
+    'mongodb://' +
+    process.env.DB_USER +
+    ':' +
+    process.env.DB_PASSWORD +
+    '@' +
+    process.env.DB_HOST +
+    ':' +
+    process.env.DB_PORT +
+    '/' +
+    process.env.DB_NAME;
+} else {
+  url = db.url;
+}
+
 db.mongoose
-  .connect(db.url, {
+  .connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
