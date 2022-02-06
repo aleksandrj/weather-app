@@ -1,4 +1,4 @@
-import { Drop, Wind } from 'phosphor-react';
+import { Drop, Sun, Wind } from 'phosphor-react';
 import styles from './Forecast.module.css';
 
 const Forecast = (props) => {
@@ -8,42 +8,45 @@ const Forecast = (props) => {
         <div
           className={` d-flex justify-content-center align-items-center ${styles['forecast-date']}`}
         >
-          {props.forecast.current.weekday} {props.forecast.current.date}
+          {props.forecast.current.weekday} {props.forecast.current.date},{' '}
+          {props.forecast.current.city}
         </div>
       </div>
       <div
         className={`row d-flex justify-content-center ${styles['forecast-main']}`}
       >
-        <div className={`col d-flex justify-content-center align-items-center`}>
-          <h1 className={` ${styles['forecast-main-temp']}`}>
-            {props.forecast.current.temperature}&deg;
-          </h1>
-        </div>
-        <div
-          className={`col d-grid align-items-center justify-content-center text-nowrap ${styles['forecast-main-details']}`}
-        >
-          <p className={`${styles.conditions} mb-0 align-self-end`}>
-            {props.forecast.current.conditions}
-          </p>
-          <p className={`${styles.location} mb-0 align-self-start`}>
-            {props.forecast.current.city}
-          </p>
-          <div
-            className={`d-flex align-self-start ${styles['weather-details']}`}
-          >
+        <div className="d-flex justify-content-center align-items-center mt-2">
+          <div className={`row d-flex col-6 ${styles['weather-details']}`}>
             <div className={`${styles['weather-detail']}`}>
               <span>
-                <Wind className={styles.icon} size={24} weight="fill" /> 10 m/s
+                <Wind className={styles.icon} size={24} weight="fill" />{' '}
+                {props.forecast.current.wind} m/s
               </span>
             </div>
             <div className={`${styles['weather-detail']}`}>
               <span>
                 {' '}
-                <Drop className={styles.icon} size={24} weight="fill" /> 84 %
+                <Drop className={styles.icon} size={24} weight="fill" />{' '}
+                {props.forecast.current.humidity} %
+              </span>
+            </div>
+            <div className={`${styles['weather-detail']}`}>
+              <span>
+                {' '}
+                <Sun className={styles.icon} size={24} weight="fill" />{' '}
+                {props.forecast.current.uvIndex}
               </span>
             </div>
           </div>
+          <div className={`d-flex col-6 ${styles['main-temp-container']}`}>
+            <h1 className={` ${styles['forecast-main-temp']}`}>
+              {props.forecast.current.temperature}&deg;
+            </h1>
+          </div>
         </div>
+        <p className={`${styles.conditions}`}>
+          {props.forecast.current.conditions}
+        </p>
       </div>
       <div className={`row ${styles['forecast-weekly']}`}>
         {props.forecast.forecast &&

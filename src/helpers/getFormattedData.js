@@ -10,6 +10,7 @@ const getCurrentDayForecast = (data, city, country) => ({
   temperature: data.temperature,
   humidity: data.relHumidity,
   wind: data.windSpeed,
+  uvIndex: data.uvIndex,
 });
 
 const getWeekForecast = (data) =>

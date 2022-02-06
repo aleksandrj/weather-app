@@ -25,12 +25,14 @@
   font-weight: 200;
 }
 
-.forecast-main-temp {
-  margin: 0;
-  font-size: 9.6rem;
+.main-temp-container {
+  justify-content: end;
 }
 
-.forecast-weekly {
+.forecast-main-temp {
+  margin: 0;
+  letter-spacing: -0.5rem;
+  font-size: 6.4rem;
 }
 
 .forecast-weekly-item {
@@ -43,9 +45,15 @@
   margin-left: 2rem;
 }
 
+.weather-detail {
+  padding: 0;
+}
+
 .conditions {
   font-size: 2rem;
   line-height: 1;
+  text-align: end;
+  margin: 1rem 0;
 }
 
 .location {
@@ -53,7 +61,7 @@
 }
 
 .weather-details {
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
 .forecast-weekly-item:last-child {
@@ -61,20 +69,6 @@
 }
 
 @media (max-width: 539px) {
-  .forecast-main-details {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-  }
-
-  .weather-details {
-    flex-direction: column;
-    grid-row: 1/-1;
-    grid-column: 2;
-    align-items: end;
-    gap: 0;
-  }
-
   .conditions {
     font-size: 2rem;
     grid-column: 1;
@@ -92,16 +86,27 @@
 
 @media (max-width: 380px) {
   .forecast-main-temp {
-    font-size: 6.4rem;
+    font-size: 5.6rem;
   }
 
   .conditions {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
+    margin: 0.5rem 0 1.2rem 0;
   }
 
   .location,
   .weather-detail,
   .forecast-weekly-item p {
     font-size: 0.9rem;
+  }
+
+  .weather-details {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .forecast-main-temp {
+    font-size: 5.2rem;
   }
 }
