@@ -9,7 +9,7 @@ exports.create = (req, res) => {
   const log = new Log({
     action: req.body.action,
     value: req.body.value,
-    result: req.body.result,
+    result: req.body.result ? JSON.parse(req.body.result) : null,
   });
 
   log

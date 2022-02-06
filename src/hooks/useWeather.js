@@ -8,6 +8,7 @@ import {
 const API_HOST = process.env.API_HOST || config.API_HOST;
 const API_KEY = process.env.API_KEY || config.API_KEY;
 const BASE_URL = process.env.BASE_URL || config.BASE_URL;
+const BASE_URL_DB = process.env.BASE_URL || config.BASE_URL_DB;
 
 const useWeather = () => {
   const [isError, setError] = useState(false);
@@ -35,6 +36,19 @@ const useWeather = () => {
       setError('Input must contain only letters and be <= 30 characters long.');
       return;
     }
+
+    // Log search to DB
+    fetch(`${BASE_URL_DB}/api/logs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'SEARCH',
+        value: location,
+        result: null,
+      }),
+    });
 
     setError(false);
     setLoading(true);
@@ -132,6 +146,20 @@ const useWeather = () => {
       city,
       country
     );
+
+    // Log click to DB
+    fetch(`${BASE_URL_DB}/api/logs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'CLICK',
+        value: `${locationId}-${city}`,
+        result: JSON.stringify(cleanCurWeatherData),
+      }),
+    });
+
     const cleanForecastedData = getWeekForecast(forecastedData.forecast);
 
     // Data can be "gutted" before setting value
